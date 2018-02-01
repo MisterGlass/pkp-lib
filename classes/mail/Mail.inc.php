@@ -437,7 +437,7 @@ class Mail extends DataObject {
 			*/
 
 			require(__DIR__ . '/../../../swiftmailer/lib/swift_required.php');
-			$transport = (new Swift_SmtpTransport(Config::getVar('email', 'smtp_server'), Config::getVar('email', 'smtp_port')))
+			$transport = (new Swift_SmtpTransport(Config::getVar('email', 'smtp_server'), Config::getVar('email', 'smtp_port'), Config::getVar('email', 'smtp_auth')))
 				->setUsername(Config::getVar('email', 'smtp_username'))
 				->setPassword(Config::getVar('email', 'smtp_password'))
 			;
