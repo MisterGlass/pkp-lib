@@ -426,12 +426,41 @@ class Mail extends DataObject {
 		}
 
 		if (Config::getVar('email', 'smtp')) {
+			/*
+			MrGlass - remove old SMTP class call and replace with swiftmailer
 			$smtp =& Registry::get('smtpMailer', true, null);
 			if ($smtp === null) {
 				import('mail.SMTPMailer');
 				$smtp = new SMTPMailer();
 			}
 			$sent = $smtp->mail($this, $recipients, $subject, $mailBody, $headers);
+			*/
+
+			require(__DIR__ . '/../../../swiftmailer/lib/swift_required.php');
+			$transport = (new Swift_SmtpTransport(Config::getVar('email', 'smtp_server'), Config::getVar('email', 'smtp_port')))
+				->setUsername(Config::getVar('email', 'smtp_username'))
+				->setPassword(Config::getVar('email', 'smtp_password'))
+			;
+
+			// Create the Mailer using your created Transport
+			$mailer = new Swift_Mailer($transport);
+
+			$recipientsArray = [];
+			foreach ($this->getRecipients() as $recipient) {
+				$recipientsArray[$recipient['email']] = $recipient['name'];
+			}
+
+			$fromArray = [$this->getFrom(true)['email'] ?: 'cfp@bsideslv.org' => $this->getFrom(true)['name'] ?: 'BSidesLV CFP' ];
+
+			// Create a message
+			$message = (new Swift_Message($subject))
+				->setFrom($fromArray)
+				->setTo($recipientsArray)
+				->setBody($mailBody)
+			;
+
+			// Send the message
+			$sent = $mailer->send($message);
 		} else {
 			$sent = String::mail($recipients, $subject, $mailBody, $headers, $additionalParameters);
 		}

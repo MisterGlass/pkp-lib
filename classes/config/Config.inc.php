@@ -34,7 +34,13 @@ class Config {
 	 */
 	function getVar($section, $key, $default = null) {
 		$configData =& Config::getData();
-		return isset($configData[$section][$key]) ? $configData[$section][$key] : $default;
+		if (isset($configData[$section][$key])) {
+			return $configData[$section][$key];
+		} elseif (isset($_ENV[$section.'_'.$key])) {
+			return $_ENV[$section.'_'.$key];
+		} else {
+			return $default;
+		}
 	}
 
 	/**
