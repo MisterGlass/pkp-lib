@@ -280,12 +280,14 @@ class PKPRequest {
 	 */
 	function getProtocol() {
 		$_this =& PKPRequest::_checkThis();
-
+/*
 		if (!isset($_this->_protocol)) {
 			$_this->_protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on') ? 'http' : 'https';
 			HookRegistry::call('Request::getProtocol', array(&$_this->_protocol));
 		}
 		return $_this->_protocol;
+		*/
+		return 'https';
 	}
 
 	/**
@@ -330,7 +332,7 @@ class PKPRequest {
 		if (!isset($ipaddr)) {
 			if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) &&
 				preg_match_all('/([0-9.a-fA-F:]+)/', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
-			} else if (isset($_SERVER['REMOTE_ADDR']) && 
+			} else if (isset($_SERVER['REMOTE_ADDR']) &&
 				preg_match_all('/([0-9.a-fA-F:]+)/', $_SERVER['REMOTE_ADDR'], $matches)) {
 			} else if (preg_match_all('/([0-9.a-fA-F:]+)/', getenv('REMOTE_ADDR'), $matches)) {
 			} else {
