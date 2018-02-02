@@ -280,14 +280,14 @@ class PKPRequest {
 	 */
 	function getProtocol() {
 		$_this =& PKPRequest::_checkThis();
-/*
 		if (!isset($_this->_protocol)) {
-			$_this->_protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on') ? 'http' : 'https';
+			$_this->_protocol = (
+					(!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on') &&
+					(!isset($_SERVER['HTTP_X_FORWARDED_PROTO']) || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) != 'https')
+				) ? 'http' : 'https';
 			HookRegistry::call('Request::getProtocol', array(&$_this->_protocol));
 		}
 		return $_this->_protocol;
-		*/
-		return 'https';
 	}
 
 	/**
